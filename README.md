@@ -12,7 +12,7 @@ Although this module works in fact the same way as a native Map, there are still
 > - `MapDB#set()` and `MapDB#delete()` return **promises**
 > - `Map#size` in map.db is a **method** (`MapDB#size()`)
 > - There is an additional method, `MapDB#deleteFile()`, which deletes the save file and clears the Map (returns a promise)
-> - When a value is reassigned, it is only saved in the Map but not in the actual save file, so you always have to **set the key/value pair with the new value**.
+> - When a value is reassigned to a key, it is only saved in the Map but not in the actual save file, so you always have to **set the key/value pair with the new value**.
 
 > Example:
 
