@@ -1,0 +1,24 @@
+{
+  "name": "map.db",
+  "version": "1.0.0",
+  "description": "A Map that stores data locally and loads it at startup",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GalaxyVinci05/map.db.git"
+  },
+  "keywords": [
+    "Map",
+    "DB",
+    "MapDB"
+  ],
+  "author": "GalaxyVinci05",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GalaxyVinci05/map.db/issues"
+  },
+  "homepage": "https://github.com/GalaxyVinci05/map.db#readme"
+}
