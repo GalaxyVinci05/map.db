@@ -2,7 +2,7 @@ export = MapDB;
 declare class MapDB {
     /**
      * @constructor
-     * @param {string} [filename] If not set, MapDB will work just like a native Map that only stores data in internal memory
+     * @param {string} [filename] If not set, MapDB will work just like the built-in Map that only stores data in internal memory
      * @example 'file.db'
      */
     constructor(filename?: string);
