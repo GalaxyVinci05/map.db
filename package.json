@@ -1,5 +1,5 @@
 {
-  "name": "map.db",
+  "name": "@galaxy/map.db",
   "version": "1.0.0",
   "description": "A Map that stores data locally and loads it at startup",
   "main": "index.js",
