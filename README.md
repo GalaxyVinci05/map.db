@@ -17,7 +17,7 @@ Although this module works in fact the same way as a native Map, there are still
 > Example:
 
 ```js
-const MapDB = require('map.db');
+const MapDB = require('@galaxy05/map.db');
 const mapdb = new MapDB('file.db'); // this is the save file's name + extension
 
 async function sample() {
@@ -34,8 +34,8 @@ async function sample() {
 ### Installation
 With **npm**:
 
-`npm i map.db`
+`npm i @galaxy05/map.db`
 
 With **yarn**:
 
-`yarn add map.db`
+`yarn add @galaxy05/map.db`
