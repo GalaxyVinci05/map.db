@@ -42,8 +42,6 @@ module.exports = class MapDB {
             throw new TypeError('key must be of type string or number');
         }
 
-        console.log(value);
-
         try {
             const file = fs.readFileSync(this.#db);
             const data = JSON.parse(file);
@@ -54,7 +52,6 @@ module.exports = class MapDB {
 
             await writeDB(this.#db, JSON.stringify(data));
         } catch {
-            console.log('entered catch');
             await writeDB(this.#db, `[${JSON.stringify({ key, value })}]`).catch(() => {});
         }
 
