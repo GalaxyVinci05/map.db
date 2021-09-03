@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "ESNext",
+        "noImplicitAny": true,
+        "declaration": true,
+        "watch": true,
+        "outDir": "build",
+        "declarationDir": "types"
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
