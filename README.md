@@ -1,11 +1,11 @@
 # Map.db
 
-###### A Map that stores data locally and loads it at startup
+###### A Map that stores data locally and loads it at startup. Written in TypeScript
 
 ### How does it work?
-Map.db works just like the NodeJS built-in **Map**, with the same methods and functionalities, and in fact it uses itself a Map, but while the built-in Map only stores data in internal memory, this module **stores data locally in a file and loads it back in the Map at startup**.
+Map.db works just like the JavaScript built-in **Map**, with the same methods and functionalities, and in fact it uses itself a Map, but while the built-in Map only stores data in internal memory, this module **stores data locally in a file and loads it back in the Map at startup**.
 
-The purpose of this module is to make the NodeJS built-in Map an actual **database**, and there comes the name `map.db`: a Map that can be used as a database.
+The purpose of this module is to make the JavaScript built-in Map an actual **database**, and there comes the name `map.db`: a Map that can be used as a database.
 
 ### Differences
 Although this module works in fact the same way as a Map, there are still some little differences between them, which are listed below:
