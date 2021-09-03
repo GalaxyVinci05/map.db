@@ -2,7 +2,11 @@
   "name": "@galaxy05/map.db",
   "version": "1.0.2",
   "description": "A Map that stores data locally and loads it at startup",
-  "main": "index.js",
+  "types": "types/index.d.ts",
+  "main": "build/index.js",
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,5 +24,11 @@
   "bugs": {
     "url": "https://github.com/GalaxyVinci05/map.db/issues"
   },
-  "homepage": "https://github.com/GalaxyVinci05/map.db#readme"
+  "homepage": "https://github.com/GalaxyVinci05/map.db#readme",
+  "devDependencies": {
+    "@types/node": "^16.7.10"
+  },
+  "dependencies": {
+    "typescript": "^4.4.2"
+  }
 }
