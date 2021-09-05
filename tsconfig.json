@@ -1,12 +1,14 @@
 {
     "compilerOptions": {
         "module": "CommonJS",
+        "moduleResolution": "node",
         "target": "ESNext",
         "noImplicitAny": true,
         "declaration": true,
         "watch": true,
         "outDir": "build",
-        "declarationDir": "types"
+        "declarationDir": "types",
+        "esModuleInterop": true   
     },
     "include": [
         "src/**/*"
