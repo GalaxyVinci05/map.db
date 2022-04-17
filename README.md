@@ -7,12 +7,20 @@ Map.db works just like the JavaScript built-in **Map**, with the same methods an
 
 The purpose of this module is to make the JavaScript built-in Map an actual **database**, and there comes the name `map.db`: a Map that can be used as a database.
 
+The file structure is easily accessible and the data is stored in JSON format, allowing manual editing
+
+![image](img.png)
+
+![image](img2.png)
+
+You also have the option to only use local storage without touching internal memory
+
 ### Differences
 Although this module works in fact the same way as a Map, there are still some little differences between them, which are listed below:
 > - `MapDB#set()` and `MapDB#delete()` return **promises**
 > - `Map#size` in map.db is a **method** (`MapDB#size()`)
-> - There is an additional method, `MapDB#deleteFile()`, which deletes the save file and clears the Map (returns a promise)
 > - When a value is reassigned to a key, it is only saved in the Map but not in the actual save file, so you always have to **set the key/value pair with the new value**.
+
 
 > Example:
 
