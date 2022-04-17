@@ -2,18 +2,23 @@ declare class MapDB {
     readonly map: Map<any, any>;
     filename: string;
     readonly db: string;
+    options: any;
     /**
      * @constructor
-     * @param filename If not set, MapDB will work just like the built-in Map that only stores data in internal memory
+     * @param filename If not set, MapDB will only use internal memory
      * @example 'file.db'
+     * @param options Options to pass in the constructor
+     * @param options.localOnly When enabled, MapDB will only use local storage, without touching internal memory (requires a filename)
      */
-    constructor(filename?: string);
+    constructor(filename?: string, options?: {
+        localOnly: boolean;
+    });
     /**
      *
      * @param key
      * @param value
      */
-    set(key: string | number, value: any): Promise<Map<any, any>>;
+    set(key: string | number, value: any): Promise<any[] | Map<any, any>>;
     /**
      *
      * @param key
@@ -24,14 +29,14 @@ declare class MapDB {
      * @param key
      */
     has(key: string | number): boolean;
-    entries(): IterableIterator<[any, any]>;
-    keys(): IterableIterator<any>;
-    values(): IterableIterator<any>;
+    entries(): IterableIterator<[any, any]> | any[][];
+    keys(): any[] | IterableIterator<any>;
+    values(): any[] | IterableIterator<any>;
     /**
      *
      * @param callbackfn
      */
-    forEach(callbackfn: (value: any, key: any, map: Map<any, any>) => void): void;
+    forEach(callback: (value: any, key: any, map: Map<any, any>) => void): void;
     /**
      *
      * @param key
@@ -39,9 +44,5 @@ declare class MapDB {
     delete(key: string | number): Promise<boolean>;
     clear(): Promise<void>;
     size(): number;
-    /**
-     * Deletes the db file and clears the Map
-     */
-    deleteFile(): Promise<undefined>;
 }
 export = MapDB;
