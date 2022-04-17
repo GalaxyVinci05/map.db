@@ -8,28 +8,35 @@ class MapDB {
     readonly map;
     filename: string;
     readonly db;
+    options: any;
 
     /**
      * @constructor
-     * @param filename If not set, MapDB will work just like the built-in Map that only stores data in internal memory
+     * @param filename If not set, MapDB will only use internal memory
      * @example 'file.db'
+     * @param options Options to pass in the constructor
+     * @param options.localOnly When enabled, MapDB will only use local storage, without touching internal memory (requires a filename)
      */
-    constructor(filename?: string) {
-        this.map = new Map();
+    constructor(filename?: string, options?: { localOnly: boolean }) {
+        if (!filename && options?.localOnly) throw new Error('Cannot use local storage without a filename');
+
+        this.map = !options?.localOnly ? new Map() : null;
         this.filename = filename;
         
         if (!fs.existsSync('./data/')) fs.mkdirSync('./data');
 
         this.db = this.filename ? `./data/${this.filename}` : null;
         
-        try {
-            const file = fs.readFileSync(this.db);
-            const data: any[] = JSON.parse(file.toString());
-
-            for (let i = 0; i < data.length; i++) {
-                this.map.set(data[i].key, data[i].value);
-            }
-        } catch {}
+        if (this.map && this.db) {
+            try {
+                const file = fs.readFileSync(this.db);
+                const data: any[] = JSON.parse(file.toString());
+    
+                for (let i = 0; i < data.length; i++) {
+                    this.map.set(data[i].key, data[i].value);
+                }
+            } catch {}
+        }
     }
 
     /**
@@ -42,17 +49,22 @@ class MapDB {
             throw new TypeError('key must be of type string or number');
         }
 
-        try {
-            const file = fs.readFileSync(this.db);
-            const data: any[] = JSON.parse(file.toString());
-
-            const i = data.findIndex(pair => pair.key == key);
-
-            !data[i] ? data.push({ key, value }) : data[i] = { key, value };
-
-            await writeDB(this.db, JSON.stringify(data));
-        } catch {
-            await writeDB(this.db, `[${JSON.stringify({ key, value })}]`).catch(() => {});
+        if (this.db) {
+            try {
+                const file = fs.readFileSync(this.db);
+                const data: any[] = JSON.parse(file.toString());
+    
+                const i = data.findIndex(pair => pair.key == key);
+    
+                !data[i] ? data.push({ key, value }) : data[i] = { key, value };
+    
+                await writeDB(this.db, JSON.stringify(data));
+                if (!this.map) return data;
+            } catch {
+                await writeDB(this.db, `[${JSON.stringify({ key, value })}]`).then(() => {
+                    if (!this.map) return JSON.parse(fs.readFileSync(this.db).toString());
+                });
+            }
         }
 
         return this.map.set(key, value);
@@ -64,7 +76,14 @@ class MapDB {
      */
 
     get(key: string | number) {
-        return this.map.get(key);
+        if (this.map) {
+            return this.map.get(key);
+        } else {
+            const file = fs.readFileSync(this.db);
+            const data: any[] = JSON.parse(file.toString());
+
+            return data.find(pair => pair.key == key)?.value || undefined;
+        }
     }
 
     /**
@@ -72,27 +91,62 @@ class MapDB {
      * @param key 
      */
     has(key: string | number) {
-        return this.map.has(key);
+        if (this.map) {
+            return this.map.has(key);
+        } else {
+            const file = fs.readFileSync(this.db);
+            const data: any[] = JSON.parse(file.toString());
+
+            return data.find(pair => pair.key == key) ? true : false;
+        }
     }
 
     entries() {
-        return this.map.entries();
+        if (this.map) {
+            return this.map.entries();
+        } else {
+            const file = fs.readFileSync(this.db);
+            const data: any[] = JSON.parse(file.toString());
+
+            return data.map(pair => [pair.key, pair.value]);
+        }
     }
 
     keys() {
-        return this.map.keys();
+        if (this.map) {
+            return this.map.keys();
+        } else {
+            const file = fs.readFileSync(this.db);
+            const data: any[] = JSON.parse(file.toString());
+
+            return data.map(pair => pair.key);
+        }
     }
 
     values() {
-        return this.map.values();
+        if (this.map) {
+            return this.map.values();
+        } else {
+            const file = fs.readFileSync(this.db);
+            const data: any[] = JSON.parse(file.toString());
+
+            return data.map(pair => pair.value);
+        }
     }
 
     /**
      * 
      * @param callbackfn 
      */
-    forEach(callbackfn: (value: any, key: any, map: Map<any, any>) => void) {
-        this.map.forEach(callbackfn);
+    forEach(callback: (value: any, key: any, map: Map<any, any>) => void) {
+        if (this.map) {
+            this.map.forEach(callback);
+        } else {
+            const file = fs.readFileSync(this.db);
+            const data: any[] = JSON.parse(file.toString());
+
+            data.forEach(pair => callback(pair.value, pair.key, this.map));
+        }
     }
 
     /**
@@ -100,39 +154,46 @@ class MapDB {
      * @param key 
      */
     async delete(key: string | number) {
-        try {
-            const file = fs.readFileSync(this.db);
-            const data: any[] = JSON.parse(file.toString());
+        if (this.db) {
+            try {
+                const file = fs.readFileSync(this.db);
+                const data: any[] = JSON.parse(file.toString());
+    
+                const i = data.findIndex(pair => pair.key == key);
+    
+                if (data[i]) {
+                    data.splice(i, 1);
+                    await writeDB(this.db, JSON.stringify(data));
 
-            const i = data.findIndex(pair => pair.key == key);
+                    if (!this.map) return true;
+                } else if (!this.map) {
+                    return false;
+                }
+            } catch {}
+        }
 
-            if (data[i]) {
-                data.splice(i, 1);
-                await writeDB(this.db, JSON.stringify(data));
-            }
-        } catch {}
-
-        return this.map.delete(key);
+        if (this.map) {
+            return this.map.delete(key);
+        }
     }
 
     async clear() {
         await writeDB(this.db, JSON.stringify([])).catch(() => {});
 
-        this.map.clear();
+        if (this.map) {
+            this.map.clear();
+        }
     }
 
     size() {
-        return this.map.size;
-    }
+        if (this.map) {
+            return this.map.size;
+        } else {
+            const file = fs.readFileSync(this.db);
+            const data: any[] = JSON.parse(file.toString());
 
-    /**
-     * Deletes the db file and clears the Map
-     */
-    async deleteFile(): Promise<undefined> {
-        await deleteDB(this.db).catch(() => {});
-        this.map.clear();
-
-        return undefined;
+            return data.length;
+        }
     }
 }
 
