@@ -5,7 +5,7 @@
   "types": "types/index.d.ts",
   "main": "build/index.js",
   "engines": {
-    "node": ">=12"
+    "node": ">=20"
   },
   "scripts": {
     "build": "tsc"
@@ -26,9 +26,9 @@
   },
   "homepage": "https://github.com/GalaxyVinci05/map.db#readme",
   "devDependencies": {
-    "@types/node": "^16.7.10"
+    "@types/node": "^24.10.1"
   },
   "dependencies": {
-    "typescript": "^4.4.2"
+    "typescript": "^5.9.3"
   }
 }
