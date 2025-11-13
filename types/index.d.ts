@@ -29,9 +29,9 @@ declare class MapDB {
      * @param key
      */
     has(key: string | number): boolean;
-    entries(): IterableIterator<[any, any]> | any[][];
-    keys(): any[] | IterableIterator<any>;
-    values(): any[] | IterableIterator<any>;
+    entries(): MapIterator<[any, any]> | any[][];
+    keys(): any[] | MapIterator<any>;
+    values(): any[] | MapIterator<any>;
     /**
      *
      * @param callbackfn
