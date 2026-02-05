@@ -2,17 +2,17 @@ declare class MapDB {
     readonly map: Map<any, any>;
     filename: string;
     readonly db: string;
-    options: any;
+    options: MapDBOptions;
+    private path;
     /**
      * @constructor
      * @param filename If not set, MapDB will only use internal memory
      * @example 'file.db'
      * @param options Options to pass in the constructor
-     * @param options.localOnly When enabled, MapDB will only use local storage, without touching internal memory (requires a filename)
+     * @param options.localOnly Disable internal memory
+     * @param options.path Optional existing path to save the MapDB data directory
      */
-    constructor(filename?: string, options?: {
-        localOnly: boolean;
-    });
+    constructor(filename?: string, options?: MapDBOptions);
     /**
      *
      * @param key
@@ -44,5 +44,9 @@ declare class MapDB {
     delete(key: string | number): Promise<boolean>;
     clear(): Promise<void>;
     size(): number;
+}
+interface MapDBOptions {
+    localOnly?: boolean;
+    path?: string;
 }
 export = MapDB;

@@ -1,6 +1,6 @@
 {
   "name": "@galaxy05/map.db",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "A Map that stores data locally and loads it at startup",
   "types": "types/index.d.ts",
   "main": "build/index.js",
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/GalaxyVinci05/map.db#readme",
   "devDependencies": {
-    "@types/node": "^24.10.1"
+    "@types/node": "^25.2.0"
   },
   "dependencies": {
     "typescript": "^5.9.3"

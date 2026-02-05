@@ -2,30 +2,33 @@ import { promisify } from 'util';
 import * as fs from 'fs';
 
 const writeDB = promisify(fs.writeFile);
-const deleteDB = promisify(fs.unlink);
+// const deleteDB = promisify(fs.unlink);
 
 class MapDB {
     readonly map;
     filename: string;
     readonly db;
-    options: any;
+    options: MapDBOptions;
+    private path: string;
 
     /**
      * @constructor
      * @param filename If not set, MapDB will only use internal memory
      * @example 'file.db'
      * @param options Options to pass in the constructor
-     * @param options.localOnly When enabled, MapDB will only use local storage, without touching internal memory (requires a filename)
+     * @param options.localOnly Disable internal memory
+     * @param options.path Optional existing path to save the MapDB data directory
      */
-    constructor(filename?: string, options?: { localOnly: boolean }) {
+    constructor(filename?: string, options?: MapDBOptions) {
         if (!filename && options?.localOnly) throw new Error('Cannot use local storage without a filename');
 
         this.map = !options?.localOnly ? new Map() : null;
         this.filename = filename;
+        this.path = options.path ?? '.';
         
-        if (!fs.existsSync('./data/')) fs.mkdirSync('./data');
+        if (!fs.existsSync(`${this.path}/data/`)) fs.mkdirSync(`${this.path}/data`);
 
-        this.db = this.filename ? `./data/${this.filename}` : null;
+        this.db = this.filename ? `${this.path}/data/${this.filename}` : null;
         
         if (this.map && this.db) {
             try {
@@ -195,6 +198,11 @@ class MapDB {
             return data.length;
         }
     }
+}
+
+interface MapDBOptions {
+    localOnly?: boolean;
+    path?: string;
 }
 
 export = MapDB;
