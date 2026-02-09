@@ -24,7 +24,7 @@ class MapDB {
 
         this.map = !options?.localOnly ? new Map() : null;
         this.filename = filename;
-        this.path = options.path ?? '.';
+        this.path = options?.path ?? '.';
         
         if (!fs.existsSync(`${this.path}/data/`)) fs.mkdirSync(`${this.path}/data`);
 
@@ -200,9 +200,9 @@ class MapDB {
     }
 }
 
-interface MapDBOptions {
+export interface MapDBOptions {
     localOnly?: boolean;
     path?: string;
 }
 
-export = MapDB;
+export default MapDB;

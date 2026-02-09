@@ -45,8 +45,8 @@ declare class MapDB {
     clear(): Promise<void>;
     size(): number;
 }
-interface MapDBOptions {
+export interface MapDBOptions {
     localOnly?: boolean;
     path?: string;
 }
-export = MapDB;
+export default MapDB;
