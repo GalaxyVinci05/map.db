@@ -5,10 +5,10 @@ const writeDB = promisify(fs.writeFile);
 // const deleteDB = promisify(fs.unlink);
 
 export class MapDB {
-    readonly map;
-    filename: string;
-    readonly db;
-    options: MapDBOptions;
+    readonly map: Map<string | number, any> | null;
+    filename: string | null;
+    readonly db: string | null;
+    options: MapDBOptions | null;
     private path: string;
 
     /**
@@ -22,8 +22,9 @@ export class MapDB {
     constructor(filename?: string, options?: MapDBOptions) {
         if (!filename && options?.localOnly) throw new Error('Cannot use local storage without a filename');
 
+        this.options = options || null;
         this.map = !options?.localOnly ? new Map() : null;
-        this.filename = filename;
+        this.filename = filename || null;
         this.path = options?.path ?? '.';
         
         if (!fs.existsSync(`${this.path}/data/`)) fs.mkdirSync(`${this.path}/data`);
@@ -38,7 +39,9 @@ export class MapDB {
                 for (let i = 0; i < data.length; i++) {
                     this.map.set(data[i].key, data[i].value);
                 }
-            } catch {}
+            } catch (err) {
+                console.error(err);
+            }
         }
     }
 
@@ -65,23 +68,22 @@ export class MapDB {
                 if (!this.map) return data;
             } catch {
                 await writeDB(this.db, `[${JSON.stringify({ key, value })}]`).then(() => {
-                    if (!this.map) return JSON.parse(fs.readFileSync(this.db).toString());
+                    if (!this.map && this.db) return JSON.parse(fs.readFileSync(this.db).toString());
                 });
             }
         }
 
-        return this.map.set(key, value);
+        return this.map?.set(key, value);
     }
 
     /**
      * 
      * @param key 
      */
-
     get(key: string | number) {
         if (this.map) {
             return this.map.get(key);
-        } else {
+        } else if (this.db) {
             const file = fs.readFileSync(this.db);
             const data: any[] = JSON.parse(file.toString());
 
@@ -96,7 +98,7 @@ export class MapDB {
     has(key: string | number) {
         if (this.map) {
             return this.map.has(key);
-        } else {
+        } else if (this.db) {
             const file = fs.readFileSync(this.db);
             const data: any[] = JSON.parse(file.toString());
 
@@ -107,7 +109,7 @@ export class MapDB {
     entries() {
         if (this.map) {
             return this.map.entries();
-        } else {
+        } else if (this.db) {
             const file = fs.readFileSync(this.db);
             const data: any[] = JSON.parse(file.toString());
 
@@ -118,7 +120,7 @@ export class MapDB {
     keys() {
         if (this.map) {
             return this.map.keys();
-        } else {
+        } else if (this.db) {
             const file = fs.readFileSync(this.db);
             const data: any[] = JSON.parse(file.toString());
 
@@ -129,7 +131,7 @@ export class MapDB {
     values() {
         if (this.map) {
             return this.map.values();
-        } else {
+        } else if (this.db) {
             const file = fs.readFileSync(this.db);
             const data: any[] = JSON.parse(file.toString());
 
@@ -141,14 +143,14 @@ export class MapDB {
      * 
      * @param callbackfn 
      */
-    forEach(callback: (value: any, key: any, map: Map<any, any>) => void) {
+    forEach(callback: (value: any, key: any, map?: Map<any, any>) => void) {
         if (this.map) {
             this.map.forEach(callback);
-        } else {
+        } else if (this.db) {
             const file = fs.readFileSync(this.db);
             const data: any[] = JSON.parse(file.toString());
 
-            data.forEach(pair => callback(pair.value, pair.key, this.map));
+            data.forEach(pair => callback(pair.value, pair.key));
         }
     }
 
@@ -172,7 +174,9 @@ export class MapDB {
                 } else if (!this.map) {
                     return false;
                 }
-            } catch {}
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         if (this.map) {
@@ -181,7 +185,7 @@ export class MapDB {
     }
 
     async clear() {
-        await writeDB(this.db, JSON.stringify([])).catch(() => {});
+        if (this.db) await writeDB(this.db, JSON.stringify([])).catch(err => console.error(err));
 
         if (this.map) {
             this.map.clear();
@@ -191,7 +195,7 @@ export class MapDB {
     size() {
         if (this.map) {
             return this.map.size;
-        } else {
+        } else if (this.db) {
             const file = fs.readFileSync(this.db);
             const data: any[] = JSON.parse(file.toString());
 

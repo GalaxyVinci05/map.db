@@ -1,8 +1,8 @@
 export declare class MapDB {
-    readonly map: any;
-    filename: string;
-    readonly db: any;
-    options: MapDBOptions;
+    readonly map: Map<string | number, any> | null;
+    filename: string | null;
+    readonly db: string | null;
+    options: MapDBOptions | null;
     private path;
     /**
      * @constructor
@@ -18,7 +18,7 @@ export declare class MapDB {
      * @param key
      * @param value
      */
-    set(key: string | number, value: any): Promise<any>;
+    set(key: string | number, value: any): Promise<any[] | Map<string | number, any> | undefined>;
     /**
      *
      * @param key
@@ -28,22 +28,22 @@ export declare class MapDB {
      *
      * @param key
      */
-    has(key: string | number): any;
-    entries(): any;
-    keys(): any;
-    values(): any;
+    has(key: string | number): boolean | undefined;
+    entries(): MapIterator<[string | number, any]> | any[][] | undefined;
+    keys(): any[] | MapIterator<string | number> | undefined;
+    values(): any[] | MapIterator<any> | undefined;
     /**
      *
      * @param callbackfn
      */
-    forEach(callback: (value: any, key: any, map: Map<any, any>) => void): void;
+    forEach(callback: (value: any, key: any, map?: Map<any, any>) => void): void;
     /**
      *
      * @param key
      */
-    delete(key: string | number): Promise<any>;
+    delete(key: string | number): Promise<boolean | undefined>;
     clear(): Promise<void>;
-    size(): any;
+    size(): number | undefined;
 }
 export interface MapDBOptions {
     localOnly?: boolean;
