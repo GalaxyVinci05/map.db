@@ -1,7 +1,7 @@
-declare class MapDB {
-    readonly map: Map<any, any>;
+export declare class MapDB {
+    readonly map: any;
     filename: string;
-    readonly db: string;
+    readonly db: any;
     options: MapDBOptions;
     private path;
     /**
@@ -18,7 +18,7 @@ declare class MapDB {
      * @param key
      * @param value
      */
-    set(key: string | number, value: any): Promise<any[] | Map<any, any>>;
+    set(key: string | number, value: any): Promise<any>;
     /**
      *
      * @param key
@@ -28,10 +28,10 @@ declare class MapDB {
      *
      * @param key
      */
-    has(key: string | number): boolean;
-    entries(): MapIterator<[any, any]> | any[][];
-    keys(): any[] | MapIterator<any>;
-    values(): any[] | MapIterator<any>;
+    has(key: string | number): any;
+    entries(): any;
+    keys(): any;
+    values(): any;
     /**
      *
      * @param callbackfn
@@ -41,12 +41,11 @@ declare class MapDB {
      *
      * @param key
      */
-    delete(key: string | number): Promise<boolean>;
+    delete(key: string | number): Promise<any>;
     clear(): Promise<void>;
-    size(): number;
+    size(): any;
 }
 export interface MapDBOptions {
     localOnly?: boolean;
     path?: string;
 }
-export default MapDB;

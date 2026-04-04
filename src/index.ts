@@ -4,7 +4,7 @@ import * as fs from 'fs';
 const writeDB = promisify(fs.writeFile);
 // const deleteDB = promisify(fs.unlink);
 
-class MapDB {
+export class MapDB {
     readonly map;
     filename: string;
     readonly db;
@@ -34,7 +34,7 @@ class MapDB {
             try {
                 const file = fs.readFileSync(this.db);
                 const data: any[] = JSON.parse(file.toString());
-    
+
                 for (let i = 0; i < data.length; i++) {
                     this.map.set(data[i].key, data[i].value);
                 }
@@ -56,11 +56,11 @@ class MapDB {
             try {
                 const file = fs.readFileSync(this.db);
                 const data: any[] = JSON.parse(file.toString());
-    
+
                 const i = data.findIndex(pair => pair.key == key);
-    
+
                 !data[i] ? data.push({ key, value }) : data[i] = { key, value };
-    
+
                 await writeDB(this.db, JSON.stringify(data));
                 if (!this.map) return data;
             } catch {
@@ -161,9 +161,9 @@ class MapDB {
             try {
                 const file = fs.readFileSync(this.db);
                 const data: any[] = JSON.parse(file.toString());
-    
+
                 const i = data.findIndex(pair => pair.key == key);
-    
+
                 if (data[i]) {
                     data.splice(i, 1);
                     await writeDB(this.db, JSON.stringify(data));
@@ -204,5 +204,3 @@ export interface MapDBOptions {
     localOnly?: boolean;
     path?: string;
 }
-
-export default MapDB;
