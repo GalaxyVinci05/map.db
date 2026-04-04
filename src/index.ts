@@ -31,7 +31,7 @@ export class MapDB {
 
         this.db = this.filename ? `${this.path}/data/${this.filename}` : null;
         
-        if (this.map && this.db) {
+        if (this.map && this.db && fs.existsSync(this.db)) {
             try {
                 const file = fs.readFileSync(this.db);
                 const data: any[] = JSON.parse(file.toString());
